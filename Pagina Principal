@@ -1,0 +1,206 @@
+import React, { useEffect, useState } from "react";
+
+/**
+ * Casa Coghi – One-page website (React/TSX)
+ * - Rustic palette (green & coffee)
+ * - Ultra-quick access to Menu (PDF), Events (PDF), WhatsApp, Call, Email
+ * - Phone: 2574 2010 / E.164 +50625742010
+ * - Email: casacoghi@gmail.com
+ *
+ * Insertar imágenes: Cambiá los src de <img> por tus URLs (Google Drive con enlace público directo o CDN/host externo).
+ */
+
+// External links (provided by you)
+const MENU_URL = "https://drive.google.com/file/d/1OUSRcViX2DNFBrFDF3dPLHECBe5KFxMd/view?usp=drivesdk";
+const EVENTOS_URL = "https://drive.google.com/file/d/1aYcHU9qLEHVnc_frb2SNYbKJz4l8XTXM/view?usp=drivesdk";
+const EMAIL = "casacoghi@gmail.com";
+
+// Palette
+const palette = {
+  coffee: "#5d4037",
+  coffeeDark: "#4e342e",
+  leaf: "#2e7d32",
+  leafSoft: "#4caf50",
+};
+
+const Section: React.FC<{ id?: string; className?: string }> = ({ id, className = "", children }) => (
+  <section id={id} className={`max-w-7xl mx-auto px-6 ${className}`}>{children}</section>
+);
+
+const Card: React.FC<{ title: string; icon: string }> = ({ title, icon, children }) => (
+  <div className="rounded-2xl border shadow-sm p-6 bg-white/90 backdrop-blur" style={{ borderColor: `${palette.coffee}55` }}>
+    <div className="flex items-center gap-3 mb-2">
+      <div className="h-10 w-10 rounded-xl grid place-items-center text-xl text-white" style={{ background: palette.leaf }}>{icon}</div>
+      <h3 className="font-semibold text-lg" style={{ color: palette.coffee }}>{title}</h3>
+    </div>
+    <div className="text-sm text-gray-700">{children}</div>
+  </div>
+);
+
+const MenuItem: React.FC<{ name: string; price?: string; desc?: string }> = ({ name, price, desc }) => (
+  <div className="flex items-start justify-between gap-6 py-3 border-b border-gray-200">
+    <div>
+      <p className="font-medium" style={{ color: palette.coffee }}>{name}</p>
+      {desc && <p className="text-sm text-gray-600">{desc}</p>}
+    </div>
+    {price && <p className="shrink-0 font-semibold" style={{ color: palette.coffee }}>{price}</p>}
+  </div>
+);
+
+export const buildTelHref = (e164: string) => `tel:${e164}`;
+export const buildWhatsAppHref = (intlDigits: string) => `https://wa.me/${intlDigits}`;
+
+const runSmokeTests = () => {
+  try {
+    console.assert(buildTelHref("+50625742010") === "tel:+50625742010", "Tel href mismatch");
+    console.assert(buildWhatsAppHref("50625742010").includes("https://wa.me/50625742010"), "WhatsApp href mismatch");
+    console.assert("2574 2010".replace(/\s/g, "") === "25742010", "Phone spacing test failed");
+  } catch {}
+};
+
+export default function CasaCoghiSite() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  useEffect(() => runSmokeTests(), []);
+
+  return (
+    <div className="min-h-screen text-gray-900 bg-gradient-to-b from-green-50 via-yellow-50 to-stone-100">
+      {/* Header */}
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-yellow-900/20 shadow-sm">
+        <Section className="py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full" style={{ background: palette.coffee }} />
+            <div>
+              <p className="text-2xl font-extrabold" style={{ color: palette.coffee }}>Casa Coghi</p>
+              <p className="text-xs tracking-widest uppercase" style={{ color: palette.leaf }}>Restaurante • Hacienda Ajenjal</p>
+            </div>
+          </div>
+          <nav className="hidden md:flex items-center gap-4 text-sm">
+            <a href="#menu" className="hover:text-green-700">Menú</a>
+            <a href="#eventos" className="hover:text-green-700">Eventos</a>
+            <a href="#contacto" className="hover:text-green-700">Contacto</a>
+            <a href={MENU_URL} target="_blank" rel="noreferrer" className="px-3 py-2 rounded-lg font-semibold text-white" style={{ background: palette.coffee }}>Ver menú (PDF)</a>
+            <a href={buildTelHref("+50625742010")} className="px-3 py-2 rounded-lg text-white font-semibold shadow" style={{ background: palette.leaf }}>Llamar: 2574 2010</a>
+          </nav>
+          <button className="md:hidden px-3 py-2 rounded-lg border" style={{ borderColor: `${palette.coffee}55` }} onClick={() => setMobileOpen(o => !o)} aria-label="Abrir menú">☰</button>
+        </Section>
+        {mobileOpen && (
+          <Section className="md:hidden pb-4 grid gap-2 border-t">
+            <a href="#menu" onClick={() => setMobileOpen(false)} className="py-1">Menú</a>
+            <a href="#eventos" onClick={() => setMobileOpen(false)} className="py-1">Eventos</a>
+            <a href="#contacto" onClick={() => setMobileOpen(false)} className="py-1">Contacto</a>
+            <a href={MENU_URL} target="_blank" rel="noreferrer" className="mt-2 underline">Ver menú (PDF)</a>
+            <a href={buildTelHref("+50625742010")} className="mt-1 px-4 py-2 rounded-lg text-white font-semibold shadow w-max" style={{ background: palette.leaf }}>Llamar: 2574 2010</a>
+          </Section>
+        )}
+      </header>
+
+      {/* Hero */}
+      <Section className="py-12 md:py-16 grid md:grid-cols-2 gap-8">
+        <div>
+          <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-black/10">Ujarrás, Cartago</span>
+          <h1 className="text-4xl md:text-5xl font-extrabold leading-tight mt-4" style={{ color: palette.coffee }}>
+            Naturaleza y gastronomía con alma rústica
+          </h1>
+          <p className="mt-3 text-lg text-gray-700">Zonas verdes, granja con animalitos y cocina especializada. Un lugar diferente para pasar el día en familia.</p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <a href={MENU_URL} target="_blank" rel="noreferrer" className="px-5 py-3 rounded-lg font-semibold text-white shadow" style={{ background: palette.coffee }}>Abrir menú (PDF)</a>
+            <a href={EVENTOS_URL} target="_blank" rel="noreferrer" className="px-5 py-3 rounded-lg font-semibold border" style={{ borderColor: `${palette.coffee}55` }}>Paquetes de eventos (PDF)</a>
+            <a href={buildWhatsAppHref("50625742010")} target="_blank" rel="noreferrer" className="px-5 py-3 rounded-lg font-semibold text-white" style={{ background: palette.leaf }}>WhatsApp</a>
+          </div>
+        </div>
+        <div className="rounded-3xl overflow-hidden shadow-2xl border-4" style={{ borderColor: `${palette.coffee}66` }}>
+          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1400&auto=format&fit=crop" alt="Terraza rústica" className="w-full h-80 md:h-full object-cover" />
+        </div>
+      </Section>
+
+      {/* Quick Actions */}
+      <Section className="py-4">
+        <div className="grid sm:grid-cols-3 gap-3">
+          <a href={MENU_URL} target="_blank" rel="noreferrer" className="text-center px-4 py-3 rounded-xl bg-white border shadow-sm font-semibold" style={{ borderColor: `${palette.coffee}55` }}>📄 Ver Menú</a>
+          <a href={EVENTOS_URL} target="_blank" rel="noreferrer" className="text-center px-4 py-3 rounded-xl bg-white border shadow-sm font-semibold" style={{ borderColor: `${palette.coffee}55` }}>🎉 Paquetes de Eventos</a>
+          <a href={buildTelHref("+50625742010")} className="text-center px-4 py-3 rounded-xl text-white font-semibold" style={{ background: palette.leaf }}>📞 Llamar 2574 2010</a>
+        </div>
+      </Section>
+
+      {/* Highlights */}
+      <Section id="about" className="py-12 grid md:grid-cols-3 gap-6">
+        <Card title="Hacienda y naturaleza" icon="🌿">Caminos de madera, praderas y miradores. Ambiente fresco y relajado.</Card>
+        <Card title="Granja con animalitos" icon="🐴">Para grandes y chicos. Seguro, educativo y divertido.</Card>
+        <Card title="Cocina especializada" icon="🍴">Carnes, pastas, ceviches y coctelería de la casa.</Card>
+      </Section>
+
+      {/* Menu preview */}
+      <Section id="menu" className="py-12 bg-white/70 backdrop-blur rounded-[2rem]">
+        <h2 className="text-3xl md:text-4xl font-extrabold text-center" style={{ color: palette.coffee }}>Menú destacado</h2>
+        <div className="mt-8 grid md:grid-cols-2 gap-10">
+          <div className="rounded-2xl bg-white border p-6" style={{ borderColor: `${palette.coffee}55` }}>
+            <h3 className="font-semibold text-xl mb-3" style={{ color: palette.leaf }}>Aperitivos <a href={MENU_URL} target="_blank" rel="noreferrer" className="ml-2 text-sm underline">(ver carta)</a></h3>
+            <MenuItem name="Ceviche de camarón" price="₡6 950" />
+            <MenuItem name="Sopa Azteca" price="₡6 190" />
+            <MenuItem name="Papas bravas" price="₡3 700" />
+          </div>
+          <div className="rounded-2xl bg-white border p-6" style={{ borderColor: `${palette.coffee}55` }}>
+            <h3 className="font-semibold text-xl mb-3" style={{ color: palette.leaf }}>Coctelería (₡4000 c/u) <a href={MENU_URL} target="_blank" rel="noreferrer" className="ml-2 text-sm underline">(ver carta)</a></h3>
+            <MenuItem name="Sangría Mystic 🍇" desc="Fresca de la casa" />
+            <MenuItem name="Tinto de Atardecer 🌅" desc="Vino tinto ligero con cítricos" />
+            <MenuItem name="Jardín Tónico 🌱" desc="Gin tonic con notas herbales" />
+            <MenuItem name="Brisa de Margarita 🌬️" desc="Cítricos y tequila balanceados" />
+            <MenuItem name="Mojito del Valle 🌄" desc="Hierbabuena y esencia tropical" />
+          </div>
+        </div>
+        <div className="mt-6 text-center">
+          <a href={MENU_URL} target="_blank" rel="noreferrer" className="inline-block px-5 py-3 rounded-lg font-semibold text-white shadow" style={{ background: palette.coffee }}>Abrir menú completo (PDF)</a>
+        </div>
+      </Section>
+
+      {/* Eventos */}
+      <Section id="eventos" className="py-12">
+        <div className="rounded-2xl border p-8 bg-white/90 backdrop-blur" style={{ borderColor: `${palette.coffee}55` }}>
+          <h2 className="text-3xl md:text-4xl font-extrabold" style={{ color: palette.coffee }}>Eventos en la hacienda</h2>
+          <p className="mt-2 text-gray-700">Bodas, bautizos, primeras comuniones, cumpleaños y eventos corporativos.</p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a href={EVENTOS_URL} target="_blank" rel="noreferrer" className="px-5 py-3 rounded-lg text-white font-semibold shadow" style={{ background: palette.coffee }}>Ver paquetes (PDF)</a>
+            <a href={`mailto:${EMAIL}?subject=Solicitud%20de%20presupuesto%20-%20Casa%20Coghi`} className="px-5 py-3 rounded-lg font-semibold border" style={{ borderColor: palette.coffee, color: palette.coffee }}>Escribir a {EMAIL}</a>
+            <a href={buildWhatsAppHref("50625742010")} target="_blank" rel="noreferrer" className="px-5 py-3 rounded-lg font-semibold text-white" style={{ background: palette.leaf }}>WhatsApp</a>
+          </div>
+        </div>
+      </Section>
+
+      {/* Contacto */}
+      <Section id="contacto" className="py-12">
+        <div className="grid md:grid-cols-2 gap-10 items-start">
+          <div className="rounded-2xl p-6 border bg-white/90 backdrop-blur" style={{ borderColor: `${palette.coffee}55` }}>
+            <h2 className="text-3xl font-extrabold" style={{ color: palette.coffee }}>Contacto y reservas</h2>
+            <p className="mt-2 text-gray-700">Ujarrás, Cartago – Consultá horarios en Google Maps.</p>
+            <div className="mt-6 grid gap-3">
+              <a href={buildTelHref("+50625742010")} className="px-5 py-3 rounded-lg text-white font-semibold shadow w-max" style={{ background: palette.leaf }}>Llamar: 2574 2010</a>
+              <a href={buildWhatsAppHref("50625742010")} target="_blank" rel="noreferrer" className="px-5 py-3 rounded-lg font-semibold border w-max" style={{ borderColor: palette.leaf, color: palette.leaf }}>WhatsApp</a>
+              <a href={`mailto:${EMAIL}`} className="px-5 py-3 rounded-lg font-semibold border w-max" style={{ borderColor: palette.coffee, color: palette.coffee }}>{EMAIL}</a>
+            </div>
+          </div>
+          <div className="rounded-2xl overflow-hidden shadow border" style={{ borderColor: `${palette.coffee}55` }}>
+            {/* Reemplazá este src por tu foto real */}
+            <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=1200&auto=format&fit=crop" alt="Vista de la hacienda" className="w-full h-96 object-cover" />
+          </div>
+        </div>
+      </Section>
+
+      {/* Footer */}
+      <footer className="py-10 text-white" style={{ background: palette.coffeeDark }}>
+        <Section className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-xl font-semibold">Casa Coghi</p>
+          <div className="flex items-center gap-3 text-sm">
+            <a href={MENU_URL} target="_blank" rel="noreferrer" className="underline">Menú (PDF)</a>
+            <span aria-hidden>•</span>
+            <a href={EVENTOS_URL} target="_blank" rel="noreferrer" className="underline">Eventos (PDF)</a>
+            <span aria-hidden>•</span>
+            <a href={`mailto:${EMAIL}`} className="underline">{EMAIL}</a>
+            <span aria-hidden>•</span>
+            <a href={buildTelHref("+50625742010")} className="underline">2574 2010</a>
+          </div>
+          <p className="text-sm text-white/80">© {new Date().getFullYear()} Casa Coghi – Hacienda Ajenjal. Todos los derechos reservados.</p>
+        </Section>
+      </footer>
+    </div>
+  );
+}
